@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    color-scheme: light dark;
+  }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background: #f4f5f7;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1e1f22; }
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+  }
+  @media (prefers-color-scheme: dark) {
+    .card { background: #2b2d31; color: #e3e3e3; }
+  }
+  h1 {
+    font-size: 1.25rem;
+    margin: 0 0 20px;
+  }
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+  }
+  button {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    background: #4f46e5;
+    color: white;
+    cursor: pointer;
+  }
+  button:hover { background: #4338ca; }
+  #canvasWrap {
+    margin-top: 20px;
+    display: none;
+  }
+  #canvasWrap canvas, #canvasWrap img {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+  #downloadLink {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 0.9rem;
+    color: #4f46e5;
+    text-decoration: none;
+  }
+  #error {
+    color: #d33;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    display: none;
+  }
+  #success {
+    color: #2e9e4f;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>QR Code Generator</h1>
+    <input id="textInput" type="text" placeholder="Enter text or URL" autofocus>
+    <button id="generateBtn">Generate</button>
+    <div id="error"></div>
+    <div id="success"></div>
+    <div id="canvasWrap">
+      <div id="qrcodeBox"></div>
+      <br>
+      <a id="downloadLink" download="qrcode.png">Download PNG</a>
+    </div>
+  </div>
+
+<script>
+  const input = document.getElementById('textInput');
+  const button = document.getElementById('generateBtn');
+  const qrcodeBox = document.getElementById('qrcodeBox');
+  const canvasWrap = document.getElementById('canvasWrap');
+  const downloadLink = document.getElementById('downloadLink');
+  const errorBox = document.getElementById('error');
+  const successBox = document.getElementById('success');
+
+  function generate() {
+    const text = input.value.trim();
+    errorBox.style.display = 'none';
+    successBox.style.display = 'none';
+
+    if (!text) {
+      errorBox.textContent = 'Please enter some text or a URL.';
+      errorBox.style.display = 'block';
+      canvasWrap.style.display = 'none';
+      return;
+    }
+
+    try {
+      qrcodeBox.innerHTML = '';
+      new QRCode(qrcodeBox, { text: text, width: 260, height: 260 });
+
+      const canvas = qrcodeBox.querySelector('canvas');
+      const img = qrcodeBox.querySelector('img');
+      downloadLink.href = canvas ? canvas.toDataURL('image/png') : (img ? img.src : '#');
+
+      canvasWrap.style.display = 'block';
+      successBox.textContent = 'QR Code generated successfully!';
+      successBox.style.display = 'block';
+    } catch (e) {
+      errorBox.textContent = 'Error generating QR code.';
+      errorBox.style.display = 'block';
+      canvasWrap.style.display = 'none';
+    }
+  }
+
+  button.addEventListener('click', generate);
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') generate();
+  });
+</script>
+</body>
+</html>
