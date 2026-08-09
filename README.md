@@ -43,6 +43,7 @@ Just open `index.html` in any browser (double-click it, or right-click → Open 
 4. Click **Download PNG** to save the image to your computer.
 
 This version generates the QR code entirely client-side using the `qrcodejs` library loaded from a CDN — no backend, no npm install needed to use it.
+<img width="602" height="607" alt="image" src="https://github.com/user-attachments/assets/51c98698-2d23-4ab2-995b-09b0ecbf19fa" />
 
 ## Technologies Used
 - Node.js
